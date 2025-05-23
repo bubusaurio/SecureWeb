@@ -1,5 +1,13 @@
 # SecureWeb Simple Auth Example
 
+## Clone the Repository
+
+1. Open your terminal and run:
+   ```
+   git clone https://github.com/your-username/SecureWeb.git
+   cd SecureWeb
+   ```
+
 ## Backend Setup
 
 1. Install backend dependencies:
