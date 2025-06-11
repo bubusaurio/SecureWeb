@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 // Hash password using SHA-256
 async function hashPassword(password) {
@@ -16,6 +17,7 @@ export default function Login({ onAuthSuccess }) {
   const [code, setCode] = useState('');
   const [step, setStep] = useState(1);
   const [msg, setMsg] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -62,7 +64,24 @@ export default function Login({ onAuthSuccess }) {
           </div>
           <div>
             <label className="block text-gray-700">Password</label>
-            <input type="password" required className="mt-1 w-full border rounded px-3 py-2" value={password} onChange={e => setPassword(e.target.value)} />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                required
+                className="mt-1 w-full border rounded px-3 py-2 pr-10"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500"
+                tabIndex={-1}
+                onClick={() => setShowPassword((v) => !v)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
           </div>
           <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Login</button>
         </>
