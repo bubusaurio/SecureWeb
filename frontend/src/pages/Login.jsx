@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
 
+// Hash password using SHA-256
+async function hashPassword(password) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
 export default function Login({ onAuthSuccess }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -10,10 +20,11 @@ export default function Login({ onAuthSuccess }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     setMsg('');
+    const hashedPassword = await hashPassword(password);
     const res = await fetch('http://localhost:3000/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ email, password: hashedPassword })
     });
     const data = await res.json();
     if (res.ok) {

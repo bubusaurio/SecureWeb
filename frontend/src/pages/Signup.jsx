@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
 
+// Hash password using SHA-256
+async function hashPassword(password) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
 function validatePassword(password) {
   return /[A-Z]/.test(password) &&
     /[0-9]/.test(password) &&
@@ -10,6 +20,7 @@ function validatePassword(password) {
 export default function Signup({ onAuthSuccess }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [repeatPassword, setRepeatPassword] = useState(''); // New state
   const [code, setCode] = useState('');
   const [step, setStep] = useState(1);
   const [msg, setMsg] = useState('');
@@ -17,15 +28,20 @@ export default function Signup({ onAuthSuccess }) {
   const handleSignup = async (e) => {
     e.preventDefault();
     setMsg('');
+    if (password !== repeatPassword) {
+      setMsg('Passwords do not match.');
+      return;
+    }
     if (!validatePassword(password)) {
       setMsg('Password must be at least 8 characters, include an uppercase letter, a number, and a symbol.');
       return;
     }
     try {
+      const hashedPassword = await hashPassword(password);
       const res = await fetch('http://localhost:3000/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password: hashedPassword })
       });
       let data = {};
       try {
@@ -74,6 +90,16 @@ export default function Signup({ onAuthSuccess }) {
             <label className="block text-gray-700">Password</label>
             <input type="password" required className="mt-1 w-full border rounded px-3 py-2" value={password} onChange={e => setPassword(e.target.value)} />
             <p className="text-xs text-gray-500 mt-1">Min 8 chars, 1 uppercase, 1 number, 1 symbol</p>
+          </div>
+          <div>
+            <label className="block text-gray-700">Repeat Password</label>
+            <input
+              type="password"
+              required
+              className="mt-1 w-full border rounded px-3 py-2"
+              value={repeatPassword}
+              onChange={e => setRepeatPassword(e.target.value)}
+            />
           </div>
           <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Signup</button>
         </>

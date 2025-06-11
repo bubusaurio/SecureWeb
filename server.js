@@ -53,8 +53,9 @@ function send2FACode(email, code) {
 
 app.post('/signup', async (req, res) => {
     const { email, password } = req.body;
-    if (!validatePassword(password)) {
-        return res.status(400).json({ error: 'Password must be at least 8 characters, include an uppercase letter, a number, and a symbol.' });
+    // Password is already hashed by the client, so just check length
+    if (typeof password !== 'string' || password.length !== 64) {
+        return res.status(400).json({ error: 'Password must be hashed with SHA-256.' });
     }
     let users = loadUsers();
     if (users.find(u => u.email === email)) {
@@ -81,6 +82,7 @@ app.post('/verify-signup', (req, res) => {
 
 app.post('/login', (req, res) => {
     const { email, password } = req.body;
+    // Password is already hashed by the client
     let users = loadUsers();
     const user = users.find(u => u.email === email && u.password === password);
     if (!user) {
