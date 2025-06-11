@@ -24,20 +24,38 @@ export default function App() {
   };
 
   return (
-    <Router>
-      <Navbar isAuthenticated={isAuthenticated} userRole={userRole} onLogout={handleLogout} />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={
-          isAuthenticated ? <Navigate to="/todos" /> : <Login onAuthSuccess={handleAuthSuccess} />
-        } />
-        <Route path="/signup" element={
-          isAuthenticated ? <Navigate to="/todos" /> : <Signup onAuthSuccess={handleAuthSuccess} />
-        } />
-        <Route path="/todos" element={<TodoList userEmail={userEmail} userRole={userRole} />} />
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
-    </Router>
+    <div className="min-h-screen bg-gray-100">
+      <Router>
+        <Navbar isAuthenticated={isAuthenticated} userRole={userRole} onLogout={handleLogout} />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={
+            isAuthenticated ? (
+              <Navigate to="/todos" />
+            ) : (
+              <div className="flex items-center justify-center min-h-[calc(100vh-64px)]">
+                <div className="w-full max-w-md p-8 bg-white rounded shadow">
+                  <Login onAuthSuccess={handleAuthSuccess} />
+                </div>
+              </div>
+            )
+          } />
+          <Route path="/signup" element={
+            isAuthenticated ? (
+              <Navigate to="/todos" />
+            ) : (
+              <div className="flex items-center justify-center min-h-[calc(100vh-64px)]">
+                <div className="w-full max-w-md p-8 bg-white rounded shadow">
+                  <Signup onAuthSuccess={handleAuthSuccess} />
+                </div>
+              </div>
+            )
+          } />
+          <Route path="/todos" element={<TodoList userEmail={userEmail} userRole={userRole} />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </Router>
+    </div>
   );
 }
 

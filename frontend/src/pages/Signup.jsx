@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function validatePassword(password) {
   return /[A-Z]/.test(password) &&
@@ -12,6 +13,7 @@ export default function Signup({ onAuthSuccess }) {
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
   const [msg, setMsg] = useState('');
+  const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -41,7 +43,7 @@ export default function Signup({ onAuthSuccess }) {
       }
       if (res.ok) {
         setMsg('Signup complete! You can now login.');
-        if (onAuthSuccess) onAuthSuccess();
+        setTimeout(() => navigate('/login'), 1200); // Redirect to login after short delay
       } else {
         setMsg(data.error || 'Signup failed');
       }
