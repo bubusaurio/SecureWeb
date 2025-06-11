@@ -37,3 +37,5 @@ export default function App() {
     </div>
   );
 }
+
+// No 2FA or password hashing logic present in this file.

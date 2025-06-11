@@ -18,7 +18,6 @@ export default function Home() {
                 <li>Validación de contraseña segura (mínimo 8 caracteres, una mayúscula, un número y un símbolo)</li>
                 <li>Registro y login de usuarios</li>
                 <li>Almacenamiento de usuarios en archivo JSON</li>
-                <li>Autenticación en dos pasos (2FA) por correo electrónico</li>
                 <li>Protección de credenciales sensibles usando variables de entorno (.env)</li>
                 <li>Permitir acceso frontend-backend usando CORS</li>
               </ul>
