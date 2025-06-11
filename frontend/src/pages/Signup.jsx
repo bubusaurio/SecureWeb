@@ -25,10 +25,12 @@ export default function Signup({ onAuthSuccess }) {
       return;
     }
     try {
+      // Default to 'user' role, but allow admin registration if email contains 'admin' (for demo)
+      const role = email.includes('admin') ? 'admin' : 'user';
       const res = await fetch('http://localhost:3000/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password, role })
       });
       let data = {};
       try {

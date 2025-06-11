@@ -18,7 +18,15 @@ export default function Login({ onAuthSuccess }) {
     const data = await res.json();
     if (res.ok) {
       setMsg('Login successful!');
-      if (onAuthSuccess) onAuthSuccess();
+      // Fetch user role after login
+      let role = 'user';
+      try {
+        const usersRes = await fetch('http://localhost:3000/users');
+        const users = await usersRes.json();
+        const user = users.find(u => u.email === email);
+        if (user && user.role) role = user.role;
+      } catch {}
+      if (onAuthSuccess) onAuthSuccess(email, role);
     } else {
       setMsg(data.error || 'Login failed');
     }
