@@ -16,3 +16,4 @@ frontend/dist/
 frontend/.vite/
 # User data
 users.json
+todos.json
