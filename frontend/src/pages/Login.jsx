@@ -10,7 +10,7 @@ export default function Login({ onAuthSuccess }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     setMsg('');
-    const res = await fetch('http://localhost:3000/login', {
+    const res = await fetch('http://localhost:3005/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -21,7 +21,7 @@ export default function Login({ onAuthSuccess }) {
       // Fetch user role after login
       let role = 'user';
       try {
-        const usersRes = await fetch('http://localhost:3000/users');
+        const usersRes = await fetch('http://localhost:3005/users');
         const users = await usersRes.json();
         const user = users.find(u => u.email === email);
         if (user && user.role) role = user.role;

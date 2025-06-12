@@ -80,10 +80,10 @@ app.get('/todos', (req, res) => {
     res.json(todos);
 });
 
-// Create todo (user or admin)
+// Create todo (admin only)
 app.post('/todos', (req, res) => {
     const role = getUserRole(req);
-    if (role === 'guest') return res.status(403).json({ error: 'Login required' });
+    if (role !== 'admin') return res.status(403).json({ error: 'Admin only' });
     const { text } = req.body;
     if (!text) return res.status(400).json({ error: 'Text required' });
     const todos = loadTodos();
@@ -93,10 +93,10 @@ app.post('/todos', (req, res) => {
     res.json(newTodo);
 });
 
-// Update todo (admin only)
+// Update todo (admin or user)
 app.put('/todos/:id', (req, res) => {
     const role = getUserRole(req);
-    if (role !== 'admin') return res.status(403).json({ error: 'Admin only' });
+    if (role !== 'admin' && role !== 'user') return res.status(403).json({ error: 'Admin or user only' });
     const { id } = req.params;
     const { text } = req.body;
     let todos = loadTodos();
@@ -126,4 +126,4 @@ app.get('/users', (req, res) => {
     res.json(users.map(u => ({ email: u.email, role: u.role || 'user' })));
 });
 
-app.listen(3000, () => console.log('Server running on port 3000'));
+app.listen(3005, () => console.log('Server running on port 3005'));
